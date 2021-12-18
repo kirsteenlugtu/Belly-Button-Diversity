@@ -80,64 +80,79 @@ function drawBubbleChart(sampleId) {
 function showMetaData(sampleId) {
     console.log(`showMetaData (${sampleId})`);
 
-    // d3.json("samples.json").then(data => {
+    d3.json("samples.json").then(data => {
 
-    //     let metadata = data.metadata;
-    //     let resultArray = metadata.filter(s => s.id === sampleId);
-    //     let result = resultArray[0];
+        let metadata = data.metadata;
+        let resultArray = metadata.filter(s => s.id == sampleId);
+        let result = resultArray[0];
 
-    //     let ID = result.id;
-    //     let ethnicity = result.ethnicity;
-    //     let gender = result.gender;
-    //     let age = result.age;
-    //     let location = result.location;
-    //     let bbtype = result.bbtype;
-    //     let wfreq = result.wfreq;
+        console.log('result',result);
 
+        let metadata_div = d3.select("#sample-metadata");
 
-    // });
+        metadata_div.html("");
+
+        Object.entries(result).forEach(([key, value]) => {
+           
+            console.log(`Key: ${key} and Value ${value}`);
+            metadata_div.append("p").text(`${key}: ${value}`);
+
+        });
+    });
 };
 
 function drawGaugeChart (sampleId){
     console.log(`drawGaugeChart (${sampleId})`);
 
-    var data = [{
-        domain: { x: [0, 1], y: [0, 1] },
-        value: 2,
-        title: { text: "Scrubs per Week" },
-        type: "indicator",
-        mode: "gauge+number+delta",
-        // delta: { reference: 380 },
+    d3.json("samples.json").then(data => {
 
-        gauge: {
-            axis: { range: [null, 9] },
-            steps: [
-                { range: [0, 1], color: "#cfdce7" },
-                { range: [1, 2], color: "#a7bfd4" },
-                { range: [2, 3], color: "#759bbc" },
-                { range: [3, 4], color: "#3d72a0" },
-                { range: [4, 5], color: "#004582" },
-                { range: [5, 6], color: "lightgray" },
-                { range: [6, 7], color: "lightgray" },
-                { range: [7, 8], color: "lightgray" },
-                { range: [8, 9], color: "lightgray" },
-            ],
-            threshold: {
-                line: { color: "red", width: 4 },
-                thickness: 0.75,
-                value: 3
+        let metadata = data.metadata;
+        let resultArray = metadata.filter(s => s.id == sampleId);
+        let result = resultArray[0];
+
+        let wfreq = result.wfreq;
+        console.log(`wfreq ${wfreq}`);
+
+        var data = [{
+            domain: { x: [0, 1], y: [0, 1] },
+            value: wfreq,
+            title: { text: "Belly Button Washing Frequency <br> Scrubs per Week" },
+            type: "indicator",
+            mode: "gauge+number+delta",
+            // delta: { reference: 380 },
+
+            gauge: {
+                axis: { range: [null, 9] },
+                steps: [
+                    { range: [0, 1], color: "#f5f8fa" },
+                    { range: [1, 2], color: "#ebf0f5" },
+                    { range: [2, 3], color: "#cfdce7" },
+                    { range: [3, 4], color: "#a7bfd4" },
+                    { range: [4, 5], color: "#759bbc" },
+                    { range: [5, 6], color: "#3d72a0" },
+                    { range: [6, 7], color: "#004582" },
+                    { range: [7, 8], color: "#003a71" },
+                    { range: [8, 9], color: "#002f60" },
+                ],
+                threshold: {
+                    line: { color: "red", width: 4 },
+                    thickness: 0.75,
+                    value: wfreq
+                }
             }
-        }
-    }];
+        }];
 
-    let layout = { 
-        width: 600, 
-        height: 450, 
-        margin: { t: 0, b: 0 } 
-    };
+        let layout = { 
+            width: 600, 
+            height: 450, 
+            margin: { t: 0, b: 0 } 
+        };
 
-    Plotly.newPlot('gauge', data, layout);
+        Plotly.newPlot('gauge', data, layout);
+    });
 };
+
+// The following portion of code was taken from Dominic LaBella's office hours session 11-Dec-2021
 
 function optionChanged(id) {
     console.log(`optionchanged(${id})`);
